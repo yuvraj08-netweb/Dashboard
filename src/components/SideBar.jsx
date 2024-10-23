@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import * as React from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -15,6 +16,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { IconButton, Tooltip } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -47,89 +53,116 @@ const AppBar = styled(MuiAppBar, {
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme }) => ({
+})(({ theme, open }) => ({
   width: drawerWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        ...openedMixin(theme),
-        "& .MuiDrawer-paper": openedMixin(theme),
-      },
-    },
-    {
-      props: ({ open }) => !open,
-      style: {
-        ...closedMixin(theme),
-        "& .MuiDrawer-paper": closedMixin(theme),
-      },
-    },
-  ],
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
 }));
 
-// #################################
-// Component Starts
-// #################################
-export default function MiniDrawer({upperLinks}) {
-  const [open, setOpen] = React.useState(false);
+export default function MiniDrawer({ upperLinks, accordionData }) {
+  const [open, setOpen] = React.useState(true);
+  const navigate = useNavigate(); // Hook for navigation
 
-  const handleMouseEnter = () => {
-    setOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    setOpen(false);
-  };
+  const handleMouseEnter = () => setOpen(true);
+  const handleMouseLeave = () => setOpen(false);
+  const handleNavigation = (path) => navigate(path);
 
   return (
     <>
-      {/* Box For NavBar */}
       <Box>
         <AppBar open={open}>
-          <Toolbar>
+          <Toolbar
+            sx={{
+              backgroundColor: "#fff",
+              minHeight: "30px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <Box>
-            <img src="https://connexio.connx.cloud/crm/images/new-logo.png" width={100} />
+              <img
+                src="https://connexio.connx.cloud/crm/images/new-logo.png"
+                width={100}
+                alt="Logo"
+              />
+            </Box>
+            <Box
+              sx={{
+                color: "#000",
+                display: "flex",
+                gap: "20px",
+                flexDirection: "row-reverse",
+                fontSize: "22px",
+              }}
+            >
+              <Box>
+              <Tooltip title="Advertised Pages">
+                  <IconButton>
+                  <i className="fa-solid fa-circle-chevron-down"></i>
+                  </IconButton>
+                </Tooltip>
+                
+              </Box>
+              <Box>
+                <Tooltip title="Notifications">
+                  <IconButton>
+                    <i className="fa fa-bell"></i>
+                  </IconButton>
+                </Tooltip>
+                
+              </Box>
+              <Box
+            
+              >
+                <Tooltip title="Help">
+                  <IconButton>
+                  <i className="fa fa-question"></i>
+                  </IconButton>
+                </Tooltip>
+                
+              </Box>
             </Box>
           </Toolbar>
         </AppBar>
       </Box>
-      {/* Side Navigation Drawers */}
-      <Box sx={{ display: "flex", marginTop: "80px" }}>
+
+      <Box sx={{ display: "flex", marginTop: "65px" }}>
         <CssBaseline />
         <Drawer
           variant="permanent"
           open={open}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          sx={{
-            marginTop: "60px",
-          }}
+          sx={{ marginTop: "60px" }}
         >
-          <Divider />
+          {/* Upper Links */}
           <List sx={{ marginTop: "80px" }}>
-            {/* // eslint-disable-next-line react/prop-types */}
-            {upperLinks?.map((item,index) => (
+            {upperLinks?.map((item, index) => (
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <ListItemButton
+                  onClick={() => handleNavigation(item.linkPath)}
                   sx={{
                     minHeight: 48,
                     px: 2.5,
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center", // Align properly based on drawer state
-                    position: "relative", // Prevent layout shift
+                    justifyContent: "center",
                   }}
                 >
                   <ListItemIcon
                     sx={{
-                      // Consistent width to prevent shifting
                       display: "flex",
                       justifyContent: "center",
                       transition: "margin-right 400ms",
-                      marginRight: open ? 0 : 0, // Add margin only when open
                     }}
                   >
                     {item.linkIcon}
@@ -139,92 +172,130 @@ export default function MiniDrawer({upperLinks}) {
                     sx={{
                       opacity: open ? 1 : 0,
                       visibility: open ? "visible" : "hidden",
-                      transition:
-                        "opacity 400ms ease-in-out, visibility 0ms 400ms",
-                      whiteSpace: "nowrap", // Prevent text wrapping
-                      overflow: "hidden", // Hide overflow text
-                      textOverflow: "ellipsis", // Handle overflow gracefully
+                      transition: "opacity 400ms, visibility 0ms 400ms",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                     }}
                   />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
+
           <Divider />
-          <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: "felx" }}>
-                <ListItemButton
+
+          {/* Accordion Section */}
+          <List sx={{ padding: 0 }}>
+            {accordionData?.map((accordion, index) => (
+              <Accordion
+                key={index}
+                disableGutters
+                sx={{
+                  boxShadow: "none",
+                  "&:before": { display: "none" }, // Remove divider
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={open ? <ExpandMoreIcon /> : null}
+                  aria-controls={`panel${index}-content`}
+                  id={`panel${index}-header`}
                   sx={{
                     minHeight: 48,
-                    px: 2.5,
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center", // Align properly based on drawer state
-                    position: "relative", // Prevent layout shift
+                    justifyContent: "flex-start", // Keep everything aligned to the left
+                    padding: "0px 16px", // Same padding as the upper list
+                    transition: "all 400ms ease", // Smooth layout changes
+                    "& .MuiAccordionSummary-content": {
+                      margin: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: open ? "flex-start" : "center", // Align content dynamically
+                      gap: "12px",
+                      width: "100%",
+                      transition: "all 400ms ease", // Smooth transitions for content layout
+                    },
                   }}
                 >
                   <ListItemIcon
                     sx={{
-                      // Consistent width to prevent shifting
+                      minWidth: 40, // Fixed width for consistency
                       display: "flex",
                       justifyContent: "center",
-                      transition: "margin-right 500ms",
-                      marginRight: open ? 0 : 0, // Add margin only when open
+                      alignItems: "center",
+                      transition: "margin-right 400ms", // Smooth margin change
                     }}
                   >
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    {accordion.icon}
                   </ListItemIcon>
-                  <ListItemText
-                    primary={text}
+
+                  <Typography
                     sx={{
-                      opacity: open ? 1 : 0,
-                      visibility: open ? "visible" : "hidden",
-                      transition:
-                        "opacity 400ms ease-in-out, visibility 0ms 400ms",
-                      whiteSpace: "nowrap", // Prevent text wrapping
-                      overflow: "hidden", // Hide overflow text
-                      textOverflow: "ellipsis", // Handle overflow gracefully
+                      opacity: open ? 1 : 0, // Smooth opacity change
+                      transform: open ? "translateX(0)" : "translateX(-10px)", // Smooth sliding effect
+                      visibility: open ? "visible" : "hidden", // Ensure smooth hiding
+                      transition: "opacity 300ms ease, transform 300ms ease", // Smooth fade and slide
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                     }}
-                  />
-                </ListItemButton>
-              </ListItem>
+                  >
+                    {accordion.title}
+                  </Typography>
+                </AccordionSummary>
+
+                <AccordionDetails sx={{ padding: "0px 16px" }}>
+                  {accordion.items.map((item, idx) => (
+                    <ListItemButton
+                      key={idx}
+                      onClick={() => handleNavigation(item.linkPath)}
+                      sx={{
+                        minHeight: 48,
+                        px: 2.5,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: open ? "flex-start" : "center", // Align content dynamically
+                        gap: "12px", // Space between icon and text
+                        transition: "all 300ms ease", // Smooth layout change
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 40, // Consistent width for icons
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        {item.linkIcon ||
+                          (idx % 2 === 0 ? <InboxIcon /> : <MailIcon />)}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.linkText}
+                        sx={{
+                          opacity: open ? 1 : 0, // Smooth opacity transition
+                          transform: open
+                            ? "translateX(0)"
+                            : "translateX(-10px)", // Slide effect
+                          visibility: open ? "visible" : "hidden", // Avoid sudden disappearance
+                          transition:
+                            "opacity 300ms ease, transform 300ms ease", // Smooth transition
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      />
+                    </ListItemButton>
+                  ))}
+                </AccordionDetails>
+              </Accordion>
             ))}
           </List>
         </Drawer>
 
-        {/* Content To Display in the right side */}
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Typography sx={{ marginBottom: 2 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-            dolor purus non enim praesent elementum facilisis leo vel. Risus at
-            ultrices mi tempus imperdiet. Semper risus in hendrerit gravida
-            rutrum quisque non tellus. Convallis convallis tellus id interdum
-            velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean
-            sed adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-            integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-            eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-            quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-            vivamus at augue. At augue eget arcu dictum varius duis at
-            consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-            donec massa sapien faucibus et molestie ac.
-          </Typography>
-          <Typography sx={{ marginBottom: 2 }}>
-            Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-            ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-            elementum integer enim neque volutpat ac tincidunt. Ornare
-            suspendisse sed nisi lacus sed viverra tellus. Purus sit amet
-            volutpat consequat mauris. Elementum eu facilisis sed odio morbi.
-            Euismod lacinia at quis risus sed vulputate odio. Morbi tincidunt
-            ornare massa eget egestas purus viverra accumsan in. In hendrerit
-            gravida rutrum quisque non tellus orci ac. Pellentesque nec nam
-            aliquam sem et tortor. Habitant morbi tristique senectus et.
-            Adipiscing elit duis tristique sollicitudin nibh sit. Ornare aenean
-            euismod elementum nisi quis eleifend. Commodo viverra maecenas
-            accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam
-            ultrices sagittis orci a.
-          </Typography>
+        <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: "#eee", minHeight:"91vh"}}>
+         <Outlet />
         </Box>
       </Box>
     </>

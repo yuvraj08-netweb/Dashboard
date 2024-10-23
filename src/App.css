@@ -1,0 +1,28 @@
+.grid {
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    column-gap: 20px;
+    row-gap: 20px;
+    grid-template-columns: auto auto auto auto auto auto;
+}
+
+@media screen and (max-width:1024px) {
+    .grid {
+        grid-template-columns: auto auto auto;
+    }
+}
+@media screen and (max-width:768px) {
+    .grid {
+        grid-template-columns: auto auto;
+    }
+}
+@media screen and (max-width:540px) {
+    .grid {
+        grid-template-columns: auto ;
+    }
+    .card{
+        max-width: 95% !important;
+    }
+}
+  
