@@ -20,7 +20,9 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { IconButton, Tooltip } from "@mui/material";
+import { IconButton, Tooltip, useTheme } from "@mui/material";
+import ThemeSwitcher from "../theme/ThemeSwitcher";
+import { useState } from "react";
 
 const drawerWidth = 240;
 
@@ -70,11 +72,26 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer({ upperLinks, accordionData }) {
   const [open, setOpen] = React.useState(true);
+  const [expandedIndex, setExpandedIndex] = useState(null); // Track the expanded accordion index
+
+  const handleAccordionChange = (index) => {
+    setExpandedIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle accordion
+  };
   const navigate = useNavigate(); // Hook for navigation
 
-  const handleMouseEnter = () => setOpen(true);
-  const handleMouseLeave = () => setOpen(false);
-  const handleNavigation = (path) => navigate(path);
+  const handleMouseEnter = () => {
+    setOpen(true);
+  };
+  const handleMouseLeave = () => {
+    setOpen(false);
+    handleAccordionChange();
+  };
+  const handleNavigation = (path) => {
+    // Set Active heere
+
+    navigate(path);
+  };
+  const theme = useTheme();
 
   return (
     <>
@@ -82,22 +99,30 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
         <AppBar open={open}>
           <Toolbar
             sx={{
-              backgroundColor: "#fff",
+              backgroundColor: theme.palette.background.default,
               minHeight: "30px",
               display: "flex",
               justifyContent: "space-between",
             }}
           >
-            <Box>
+            <Box
+              sx={
+                theme.palette.mode === "dark"
+                  ? {
+                      filter: "invert(100%)",
+                    }
+                  : ""
+              }
+            >
               <img
                 src="https://connexio.connx.cloud/crm/images/new-logo.png"
                 width={100}
                 alt="Logo"
               />
             </Box>
+            <ThemeSwitcher />
             <Box
               sx={{
-                color: "#000",
                 display: "flex",
                 gap: "20px",
                 flexDirection: "row-reverse",
@@ -105,30 +130,37 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
               }}
             >
               <Box>
-              <Tooltip title="Advertised Pages">
-                  <IconButton>
-                  <i className="fa-solid fa-circle-chevron-down"></i>
+                <Tooltip title="Advertised Pages">
+                  <IconButton
+                    sx={{
+                      color: theme.palette.primary.main,
+                    }}
+                  >
+                    <i className="fa-solid fa-circle-chevron-down"></i>
                   </IconButton>
                 </Tooltip>
-                
               </Box>
               <Box>
                 <Tooltip title="Notifications">
-                  <IconButton>
+                  <IconButton
+                    sx={{
+                      color: theme.palette.primary.main,
+                    }}
+                  >
                     <i className="fa fa-bell"></i>
                   </IconButton>
                 </Tooltip>
-                
               </Box>
-              <Box
-            
-              >
+              <Box>
                 <Tooltip title="Help">
-                  <IconButton>
-                  <i className="fa fa-question"></i>
+                  <IconButton
+                    sx={{
+                      color: theme.palette.primary.main,
+                    }}
+                  >
+                    <i className="fa fa-question"></i>
                   </IconButton>
                 </Tooltip>
-                
               </Box>
             </Box>
           </Toolbar>
@@ -147,7 +179,26 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
           {/* Upper Links */}
           <List sx={{ marginTop: "80px" }}>
             {upperLinks?.map((item, index) => (
-              <ListItem key={index} disablePadding sx={{ display: "block" }}>
+              <ListItem
+                key={index}
+                disablePadding
+                sx={{
+                  display: "block",
+                  color:
+                    index === 0
+                      ? theme.palette.primary.main
+                      : theme.palette.text.primary,
+                  backgroundColor: "transparent",
+                  transition: "background-color 300ms ease, color 300ms ease",
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.main,
+                    color: "#fff",
+                  },
+                  "&:hover .MuiListItemIcon-root": {
+                    color: "#fff",
+                  },
+                }}
+              >
                 <ListItemButton
                   onClick={() => handleNavigation(item.linkPath)}
                   sx={{
@@ -163,6 +214,10 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                       display: "flex",
                       justifyContent: "center",
                       transition: "margin-right 400ms",
+                      color:
+                        index === 0
+                          ? theme.palette.primary.main
+                          : theme.palette.text.primary,
                     }}
                   >
                     {item.linkIcon}
@@ -191,6 +246,8 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
               <Accordion
                 key={index}
                 disableGutters
+                expanded={expandedIndex === index} // Only expand the selected accordion
+                onChange={() => handleAccordionChange(index)}
                 sx={{
                   boxShadow: "none",
                   "&:before": { display: "none" }, // Remove divider
@@ -294,8 +351,16 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
           </List>
         </Drawer>
 
-        <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: "#eee", minHeight:"91vh"}}>
-         <Outlet />
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            bgcolor: theme.palette.background,
+            minHeight: "91vh",
+          }}
+        >
+          <Outlet />
         </Box>
       </Box>
     </>

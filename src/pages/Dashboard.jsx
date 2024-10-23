@@ -1,10 +1,14 @@
-import { Box, Typography } from "@mui/material"
+import { Box, Typography, useTheme } from "@mui/material"
 import BasicCard from "../components/Card"
 
 const Dashboard = () => {
+  const theme = useTheme();
+
   return (
     <div>
-         <Typography sx={{ fontSize: "25px", marginBottom: "20px" }}>
+         <Typography sx={{ fontSize: "25px", marginBottom: "20px",
+          color: theme.palette.primary.main
+         }}>
             Quick Links
           </Typography>
           <Box className="grid">

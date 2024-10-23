@@ -8,7 +8,7 @@ const Home = () => {
     {
       linkText : "Dashboard",
       linkIcon : <DashboardIcon/>,
-      linkPath:"/home/dashboard",
+      linkPath:"/crm/dashboard",
     },
     {
       linkText : "Campaigns",
@@ -45,16 +45,16 @@ const Home = () => {
       title: "Messages",
       icon:  <i className='fa fa-cart-shopping'></i>,
       items: [
-        { linkText: "Inbox", linkPath: "/inbox", linkIcon:  <i className='fa fa-cart-shopping'></i> },
-        { linkText: "Sent", linkPath: "/sent" },
+        { linkText: "Inbox", linkPath: "#", linkIcon:  <i className='fa fa-cart-shopping'></i> },
+        { linkText: "Sent", linkPath: "#" },
       ],
     },
     {
       title: "Settings",
       icon:  <i className='fa fa-cart-shopping'></i>,
       items: [
-        { linkText: "Account", linkPath: "/account" },
-        { linkText: "Privacy", linkPath: "/privacy" },
+        { linkText: "Account", linkPath: "#" },
+        { linkText: "Privacy", linkPath: "#" },
       ],
     },
   ];
