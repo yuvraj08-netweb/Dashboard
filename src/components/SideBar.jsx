@@ -263,7 +263,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                     alignItems: "center",
                     justifyContent: "flex-start", // Keep everything aligned to the left
                     padding: "0px 16px", // Same padding as the upper list
-                    transition: "all 400ms ease", // Smooth layout changes
+                    // transition: "all 400ms ease", // Smooth layout changes
                     "& .MuiAccordionSummary-content": {
                       margin: 0,
                       display: "flex",
@@ -272,6 +272,15 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                       gap: "12px",
                       width: "100%",
                       transition: "all 400ms ease", // Smooth transitions for content layout
+                    },
+                    backgroundColor: "transparent",
+                    transition: "background-color 300ms ease, color 300ms ease",
+                    "&:hover": {
+                      backgroundColor: theme.palette.primary.main,
+                      color: "#fff",
+                    },
+                    "&:hover .MuiListItemIcon-root": {
+                      color: "#fff",
                     },
                   }}
                 >
@@ -314,7 +323,16 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                         alignItems: "center",
                         justifyContent: open ? "flex-start" : "center", // Align content dynamically
                         gap: "12px", // Space between icon and text
-                        transition: "all 300ms ease", // Smooth layout change
+                        // transition: "all 300ms ease", // Smooth layout change
+                        backgroundColor: "transparent",
+                        transition: "background-color 300ms ease, color 300ms ease",
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.main,
+                          color: "#fff",
+                        },
+                        "&:hover .MuiListItemIcon-root": {
+                          color: "#fff",
+                        },
                       }}
                     >
                       <ListItemIcon
