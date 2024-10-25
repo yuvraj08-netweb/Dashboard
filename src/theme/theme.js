@@ -3,7 +3,7 @@
 export const lightTheme = {
   palette: {
     mode: "light",
-    primary: { main: "#000" },
+    primary: { main: "#000",light: "#6d7075" },
     background: { default: "#fff", paper: "#f5f5f5" },
     text: { primary: "#000" },
   },
@@ -12,7 +12,7 @@ export const lightTheme = {
 export const darkTheme = {
   palette: {
     mode: "dark",
-    primary: { main: "#fff" },
+    primary: { main: "#fff",light: "#9b9b9b" },
     background: { default: "#121212", paper: "#1d1d1d" },
     text: { primary: "#fff" },
   },

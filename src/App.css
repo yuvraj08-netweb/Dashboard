@@ -6,6 +6,9 @@
     row-gap: 20px;
     grid-template-columns: auto auto auto auto auto auto;
 }
+.css-1lj39kh-MuiAccordionDetails-root{
+    padding: 0px !important;
+}
 
 @media screen and (max-width:1024px) {
     .grid {

@@ -91,7 +91,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
     navigate(path);
   };
   const theme = useTheme();
-  
+
   return (
     <>
       <Box>
@@ -190,12 +190,12 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                   backgroundColor: "transparent",
                   transition: "background-color 300ms ease, color 300ms ease",
                   "&:hover": {
-                      backgroundColor: theme.palette.primary.light,
-                      color: theme.palette.primary.main,
-                    },
-                    "&:hover .MuiListItemIcon-root": {
-                      color: theme.palette.primary.main,
-                    },
+                    backgroundColor: theme.palette.primary.light,
+                    color: theme.palette.primary.main,
+                  },
+                  "&:hover .MuiListItemIcon-root": {
+                    color: theme.palette.primary.main,
+                  },
                 }}
               >
                 <ListItemButton
@@ -238,7 +238,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
           <Divider />
 
           {/* Accordion Section */}
-          <List sx={{ padding: 0 }}>
+          <List >
             {accordionData?.map((accordion, index) => (
               <Accordion
                 key={index}
@@ -246,6 +246,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                 expanded={expandedIndex === index} // Only expand the selected accordion
                 onChange={() => handleAccordionChange(index)}
                 sx={{
+                 
                   boxShadow: "none",
                   "&:before": { display: "none" }, // Remove divider
                 }}
@@ -255,28 +256,23 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                   id={`panel${index}-header`}
                   sx={{
                     minHeight: 48,
+                     padding:"8px 20px !important",
                     display: "flex",
                     alignItems: "center",
-                    padding: "0px 16px", // Same padding as the upper list
-                    // transition: "all 400ms ease", // Smooth layout changes
                     "& .MuiAccordionSummary-content": {
                       margin: 0,
                       display: "flex",
                       alignItems: "center",
-                      gap: "12px",
+                      gap: "16px",
                       width: "100%",
-                      // transition: "all 400ms ease", // Smooth transitions for content layout
                     },
                     backgroundColor: "transparent",
-                    // transition: "background-color 300ms ease, color 300ms ease",
+                    transition: "background-color 300ms ease, color 300ms ease",
                     "&:hover": {
                       backgroundColor: theme.palette.primary.light,
                       color: theme.palette.primary.main,
                     },
                     "&:hover .MuiListItemIcon-root": {
-                      color: theme.palette.primary.main,
-                    },
-                    "&:hover .css-1umw9bq-MuiSvgIcon-root": {
                       color: theme.palette.primary.main,
                     },
                   }}
@@ -287,6 +283,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                       display: "flex",
                       alignItems: "center",
                       transition: "margin-right 400ms", // Smooth margin change
+                      color: theme.palette.primary.main,
                     }}
                   >
                     {accordion.icon}
@@ -299,36 +296,38 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       display: "flex",
-                      justifyContent:"space-between",
+                      justifyContent: "space-between",
                     }}
                   >
                     {accordion.title}
 
-                    {expandedIndex === index ?  <i className="fa fa-chevron-up"></i> :  <i className="fa fa-chevron-down"></i>}
-                   
+                    {expandedIndex === index ? (
+                      <i className="fa fa-chevron-up"></i>
+                    ) : (
+                      <i className="fa fa-chevron-down"></i>
+                    )}
                   </Typography>
                 </AccordionSummary>
 
-                <AccordionDetails sx={{ padding: "0px 16px" }}>
+                <AccordionDetails>
                   {accordion.items.map((item, idx) => (
                     <ListItemButton
                       key={idx}
                       onClick={() => handleNavigation(item.linkPath)}
                       sx={{
                         minHeight: 48,
-                        px: 2.5,
                         display: "flex",
                         alignItems: "center",
-                        gap: "12px", // Space between icon and text
-                        // transition: "all 300ms ease", // Smooth layout change
+                        gap: "12px",
                         backgroundColor: "transparent",
-                        transition: "background-color 300ms ease, color 300ms ease",
+                        transition:
+                          "background-color 300ms ease, color 300ms ease",
                         "&:hover": {
-                          backgroundColor: theme.palette.primary.main,
-                          color: "#fff",
+                          backgroundColor: theme.palette.primary.light,
+                          color: theme.palette.primary.main,
                         },
                         "&:hover .MuiListItemIcon-root": {
-                          color: "#fff",
+                          color: theme.palette.primary.main,
                         },
                       }}
                     >
@@ -337,6 +336,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                           minWidth: 40, // Consistent width for icons
                           display: "flex",
                           alignItems: "center",
+                          color: theme.palette.primary.main,
                         }}
                       >
                         {item.linkIcon ||
