@@ -21,7 +21,7 @@ export const darkTheme = {
 export const customTheme = {
   palette: {
     mode:"light",
-    primary: { main: "#1457c9" },
+    primary: { main: "rgb(20, 87, 201)",light: "#cfe0fc" },
     background: { default: "#eee", paper: "#fff" },
     text: { primary: "#000" },
   },
