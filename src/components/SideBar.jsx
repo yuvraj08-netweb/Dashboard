@@ -283,7 +283,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                       display: "flex",
                       alignItems: "center",
                       transition: "margin-right 400ms", // Smooth margin change
-                      color: theme.palette.primary.main,
+                      color: theme.palette.text.primary,
                     }}
                   >
                     {accordion.icon}
@@ -317,6 +317,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                       sx={{
                         minHeight: 48,
                         display: "flex",
+                        padding:"8px 20px !important",
                         alignItems: "center",
                         gap: "12px",
                         backgroundColor: "transparent",
@@ -336,7 +337,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                           minWidth: 40, // Consistent width for icons
                           display: "flex",
                           alignItems: "center",
-                          color: theme.palette.primary.main,
+                          color: theme.palette.text.primary,
                         }}
                       >
                         {item.linkIcon ||
