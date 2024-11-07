@@ -19,10 +19,11 @@ import MailIcon from "@mui/icons-material/Mail";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import { IconButton, Tooltip, useTheme } from "@mui/material";
+import { Avatar, IconButton, Tooltip, useTheme } from "@mui/material";
 import ThemeSwitcher from "../theme/ThemeSwitcher";
 import { useState } from "react";
-
+import { Bell, CircleHelp, Grip, LockKeyhole, LockKeyholeOpen, LogOut, Settings } from "lucide-react";
+import { useEffect } from "react";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -69,9 +70,10 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({ upperLinks, accordionData }) {
+export default function MiniDrawer({ upperLinks, accordionData, user }) {
   const [open, setOpen] = React.useState(true);
   const [expandedIndex, setExpandedIndex] = useState(null); // Track the expanded accordion index
+  const [lock, setLock] = useState(false);
 
   const handleAccordionChange = (index) => {
     setExpandedIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle accordion
@@ -81,15 +83,29 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
   const handleMouseEnter = () => {
     setOpen(true);
   };
+
   const handleMouseLeave = () => {
-    setOpen(false);
+    if (!lock) {
+      setOpen(false);
+    }
     handleAccordionChange();
   };
+
   const handleNavigation = (path) => {
     // Set Active heere
-
     navigate(path);
   };
+
+  const handleLockBar = () => {
+    setLock(!lock);
+    localStorage.setItem("isLocked", JSON.stringify(!lock));
+  };
+
+  useEffect(() => {
+    const isLocked = JSON.parse(localStorage.getItem("isLocked"));
+    setLock(isLocked);
+  }, [setLock]);
+
   const theme = useTheme();
 
   return (
@@ -102,6 +118,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
               minHeight: "30px",
               display: "flex",
               justifyContent: "space-between",
+              padding:"0px 10px !important"
             }}
           >
             <Box
@@ -110,7 +127,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                   ? {
                       filter: "invert(100%)",
                     }
-                  : ""
+                  : {}
               }
             >
               <img
@@ -135,7 +152,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                       color: theme.palette.primary.main,
                     }}
                   >
-                    <i className="fa-solid fa-circle-chevron-down"></i>
+                    <Grip />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -146,7 +163,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                       color: theme.palette.primary.main,
                     }}
                   >
-                    <i className="fa fa-bell"></i>
+                    <Bell />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -157,7 +174,7 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                       color: theme.palette.primary.main,
                     }}
                   >
-                    <i className="fa fa-question"></i>
+                   <CircleHelp />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -168,104 +185,119 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
 
       <Box sx={{ display: "flex", marginTop: "65px" }}>
         <CssBaseline />
+
         <Drawer
+          className="demo"
           variant="permanent"
           open={open}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           sx={{ marginTop: "60px" }}
         >
-          {/* Upper Links */}
-          <List sx={{ marginTop: "80px" }}>
-            {upperLinks?.map((item, index) => (
-              <ListItem
-                key={index}
-                disablePadding
+          <List
+            sx={{
+              borderBottom: "1px solid",
+              paddingBottom: "0px !important",
+            }}
+          >
+            <ListItem
+              disablePadding
+              sx={{
+                display: "block",
+                backgroundColor: "transparent",
+                transition: "background-color 300ms ease, color 300ms ease",
+              }}
+            >
+              <Box
                 sx={{
-                  display: "block",
-                  color:
-                    index === 0
-                      ? theme.palette.primary.main
-                      : theme.palette.text.primary,
-                  backgroundColor: "transparent",
-                  transition: "background-color 300ms ease, color 300ms ease",
-                  "&:hover": {
-                    backgroundColor: theme.palette.primary.light,
-                    color: theme.palette.primary.main,
-                  },
-                  "&:hover .MuiListItemIcon-root": {
-                    color: theme.palette.primary.main,
-                  },
+                  display: "flex",
+                  alignItems: "center",
+                  // justifyContent: "center",
+                  padding: "0px 13px !important",
                 }}
               >
-                <ListItemButton
-                  onClick={() => handleNavigation(item.linkPath)}
+                <ListItemIcon
                   sx={{
-                    minHeight: 48,
-                    px: 2.5,
-                    display: "flex",
-                    alignItems: "center",
+                    // transition: "margin-right 400ms",
+                    display:"flex",
+                    columnGap:"0px !important"
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      display: "flex",
-                      transition: "margin-right 400ms",
-                      color:
-                        index === 0
-                          ? theme.palette.primary.main
-                          : theme.palette.text.primary,
-                    }}
-                  >
-                    {item.linkIcon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.linkText}
-                    sx={{
-                      // opacity: open ? 1 : 0,
-                      // visibility: open ? "visible" : "hidden",
-                      // transition: "opacity 400ms, visibility 0ms 400ms",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={user.avatar}
+                    className="userAvatar"
                   />
-                </ListItemButton>
-              </ListItem>
-            ))}
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <>
+                      <Box className="userCard">
+                        <Box className="userInfo">
+                          <span className="userName">{user.name}</span>
+                          <span className="userEmail">{user.email}</span>
+                        </Box>
+
+                        <Box className="actionBtns">
+                          <Tooltip title="Settings" placement="right">
+                            <IconButton 
+                            onClick={()=>{handleNavigation("/settings")}}
+                            sx={
+                              {
+                                padding:"0px",
+                              }
+                            }
+                            >
+                              <Settings width="15px" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Logout" placement="right">
+                            <IconButton 
+                            onClick={()=>{handleNavigation("/login")}}
+                            sx={
+                              {
+                                padding:"0px",
+                              }
+                            }>
+                              <LogOut width="15px" />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </Box>
+                    </>
+                  }
+                  sx={{
+                    // opacity: open ? 1 : 0,
+                    // visibility: open ? "visible" : "hidden",
+                    // transition: "opacity 400ms, visibility 0ms 400ms",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                />
+              </Box>
+            </ListItem>
           </List>
 
-          <Divider />
-
-          {/* Accordion Section */}
-          <List >
-            {accordionData?.map((accordion, index) => (
-              <Accordion
-                key={index}
-                disableGutters
-                expanded={expandedIndex === index} // Only expand the selected accordion
-                onChange={() => handleAccordionChange(index)}
-                sx={{
-                 
-                  boxShadow: "none",
-                  "&:before": { display: "none" }, // Remove divider
-                }}
-              >
-                <AccordionSummary
-                  aria-controls={`panel${index}-content`}
-                  id={`panel${index}-header`}
+          <Box
+            sx={{
+              overflowY: "auto",
+              overflowX: "hidden",
+              // marginTop: "80px",
+            }}
+          >
+            {/* Upper Links */}
+            <List sx={{ position: "unset" }}>
+              {upperLinks?.map((item, index) => (
+                <ListItem
+                  key={index}
+                  disablePadding
                   sx={{
-                    minHeight: 48,
-                     padding:"8px 20px !important",
-                    display: "flex",
-                    alignItems: "center",
-                    "& .MuiAccordionSummary-content": {
-                      margin: 0,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "16px",
-                      width: "100%",
-                    },
+                    display: "block",
+                    color:
+                      index === 0
+                        ? theme.palette.primary.main
+                        : theme.palette.text.primary,
                     backgroundColor: "transparent",
                     transition: "background-color 300ms ease, color 300ms ease",
                     "&:hover": {
@@ -277,86 +309,197 @@ export default function MiniDrawer({ upperLinks, accordionData }) {
                     },
                   }}
                 >
-                  <ListItemIcon
+                  <ListItemButton
+                    onClick={() => handleNavigation(item.linkPath)}
                     sx={{
-                      minWidth: 40, // Fixed width for consistency
+                      minHeight: 48,
+                      px: 2.5,
                       display: "flex",
                       alignItems: "center",
-                      transition: "margin-right 400ms", // Smooth margin change
-                      color: theme.palette.text.primary,
                     }}
                   >
-                    {accordion.icon}
-                  </ListItemIcon>
-
-                  <Typography
-                    sx={{
-                      width: "100%",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    {accordion.title}
-
-                    {expandedIndex === index ? (
-                      <i className="fa fa-chevron-up"></i>
-                    ) : (
-                      <i className="fa fa-chevron-down"></i>
-                    )}
-                  </Typography>
-                </AccordionSummary>
-
-                <AccordionDetails>
-                  {accordion.items.map((item, idx) => (
-                    <ListItemButton
-                      key={idx}
-                      onClick={() => handleNavigation(item.linkPath)}
+                    <ListItemIcon
                       sx={{
-                        minHeight: 48,
                         display: "flex",
-                        padding:"8px 20px !important",
-                        alignItems: "center",
-                        gap: "12px",
-                        backgroundColor: "transparent",
-                        transition:
-                          "background-color 300ms ease, color 300ms ease",
-                        "&:hover": {
-                          backgroundColor: theme.palette.primary.light,
-                          color: theme.palette.primary.main,
-                        },
-                        "&:hover .MuiListItemIcon-root": {
-                          color: theme.palette.primary.main,
-                        },
+                        transition: "margin-right 400ms",
+                        color:
+                          index === 0
+                            ? theme.palette.primary.main
+                            : theme.palette.text.primary,
                       }}
                     >
-                      <ListItemIcon
+                      {item.linkIcon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.linkText}
+                      sx={{
+                        // opacity: open ? 1 : 0,
+                        // visibility: open ? "visible" : "hidden",
+                        // transition: "opacity 400ms, visibility 0ms 400ms",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+
+            <Divider />
+
+            {/* Accordion Section */}
+            <List>
+              {accordionData?.map((accordion, index) => (
+                <Accordion
+                  key={index}
+                  disableGutters
+                  expanded={expandedIndex === index} // Only expand the selected accordion
+                  onChange={() => handleAccordionChange(index)}
+                  sx={{
+                    boxShadow: "none",
+                    "&:before": { display: "none" }, // Remove divider
+                  }}
+                >
+                  <AccordionSummary
+                    aria-controls={`panel${index}-content`}
+                    id={`panel${index}-header`}
+                    sx={{
+                      minHeight: 48,
+                      padding: "8px 20px !important",
+                      display: "flex",
+                      alignItems: "center",
+                      "& .MuiAccordionSummary-content": {
+                        margin: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "16px",
+                        width: "100%",
+                      },
+                      backgroundColor: "transparent",
+                      transition:
+                        "background-color 300ms ease, color 300ms ease",
+                      "&:hover": {
+                        backgroundColor: theme.palette.primary.light,
+                        color: theme.palette.primary.main,
+                      },
+                      "&:hover .MuiListItemIcon-root": {
+                        color: theme.palette.primary.main,
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 40, // Fixed width for consistency
+                        display: "flex",
+                        alignItems: "center",
+                        transition: "margin-right 400ms", // Smooth margin change
+                        color: theme.palette.text.primary,
+                      }}
+                    >
+                      {accordion.icon}
+                    </ListItemIcon>
+
+                    <Typography
+                      sx={{
+                        width: "100%",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      {accordion.title}
+
+                      {expandedIndex === index ? (
+                        <i className="fa fa-chevron-up"></i>
+                      ) : (
+                        <i className="fa fa-chevron-down"></i>
+                      )}
+                    </Typography>
+                  </AccordionSummary>
+
+                  <AccordionDetails>
+                    {accordion.items.map((item, idx) => (
+                      <ListItemButton
+                        key={idx}
+                        onClick={() => handleNavigation(item.linkPath)}
                         sx={{
-                          minWidth: 40, // Consistent width for icons
+                          minHeight: 48,
                           display: "flex",
+                          padding: "8px 20px !important",
                           alignItems: "center",
-                          color: theme.palette.text.primary,
+                          gap: "12px",
+                          backgroundColor: "transparent",
+                          transition:
+                            "background-color 300ms ease, color 300ms ease",
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.light,
+                            color: theme.palette.primary.main,
+                          },
+                          "&:hover .MuiListItemIcon-root": {
+                            color: theme.palette.primary.main,
+                          },
                         }}
                       >
-                        {item.linkIcon ||
-                          (idx % 2 === 0 ? <InboxIcon /> : <MailIcon />)}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={item.linkText}
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      />
-                    </ListItemButton>
-                  ))}
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </List>
+                        <ListItemIcon
+                          sx={{
+                            minWidth: 40, // Consistent width for icons
+                            display: "flex",
+                            alignItems: "center",
+                            color: theme.palette.text.primary,
+                          }}
+                        >
+                          {item.linkIcon ||
+                            (idx % 2 === 0 ? <InboxIcon /> : <MailIcon />)}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={item.linkText}
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        />
+                      </ListItemButton>
+                    ))}
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+            </List>
+          </Box>
+
+          <Box
+            sx={{
+              width: "100%",
+              textAlign: "right",
+              paddingRight: "10px",
+            }}
+            onClick={() => handleLockBar()}
+          >
+            {!lock ? (
+              <Tooltip title="Pin" placement="right">
+                <IconButton
+                  sx={{
+                    color: theme.palette.primary.main,
+                  }}
+                >
+                  <LockKeyholeOpen />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="UnPin" placement="right">
+                <IconButton
+                  sx={{
+                    color: theme.palette.primary.main,
+                  }}
+                >
+                  <LockKeyhole />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Box>
         </Drawer>
 
         <Box

@@ -22,7 +22,7 @@ export const customTheme = {
   palette: {
     mode:"light",
     primary: { main: "rgb(20, 87, 201)",light: "#cfe0fc" },
-    background: { default: "#eee", paper: "#fff" },
+    background: { default: "#fff", paper: "#eee" },
     text: { primary: "#000" },
   },
 };

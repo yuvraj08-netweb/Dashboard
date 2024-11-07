@@ -1,22 +1,21 @@
-
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import MiniDrawer from '../components/SideBar';
+import { Bike, CircleDollarSign, CircleUser, Gift, Handshake, LayoutDashboard, Mail, Settings, ShoppingCart, Users } from 'lucide-react';
 
 const Home = () => {  
   const upperLinks = [
     {
       linkText : "Dashboard",
-      linkIcon : <DashboardIcon/>,
+      linkIcon : <LayoutDashboard />,
       linkPath:"/crm/dashboard",
     },
     {
       linkText : "Campaigns",
-      linkIcon : <i className='fa-regular fa-handshake'></i>
+      linkIcon : <Handshake />,
     },
     {
       linkText : "Leads",
-      linkIcon : <PeopleOutlinedIcon/>
+      linkIcon : <Users />,
+      linkPath:"/crm/leads",
     },
     {
       linkText : "Customers",
@@ -24,26 +23,26 @@ const Home = () => {
     },
     {
       linkText : "Deals",
-      linkIcon : <i className='fa fa-dollar-sign'></i>
+      linkIcon : <CircleDollarSign />,
     },
     {
       linkText : "Orders",
-      linkIcon : <i className='fa fa-cart-shopping'></i>
+      linkIcon : <ShoppingCart />,
     },
     {
       linkText : "Products",
-      linkIcon : <i className='fa fa-gift'></i>
+      linkIcon : <Gift />,
     },
     {
       linkText : "Activities",
-      linkIcon : <i className='fa fa-person-biking'></i>
+      linkIcon : <Bike />,
     },
   ]
 
   const accordionData = [
     {
       title: "Messages",
-      icon:  <i className='fa fa-cart-shopping'></i>,
+      icon:  <Mail />,
       items: [
         { linkText: "Inbox", linkPath: "#", linkIcon:  <i className='fa fa-cart-shopping'></i> },
         { linkText: "Sent", linkPath: "#" },
@@ -51,17 +50,23 @@ const Home = () => {
     },
     {
       title: "Settings",
-      icon:  <i className='fa fa-cart-shopping'></i>,
+      icon:  <Settings />,
       items: [
-        { linkText: "Account", linkPath: "#" },
+        { linkText: "Account", linkPath: "#", linkIcon: <CircleUser />},
         { linkText: "Privacy", linkPath: "#" },
       ],
     },
   ];
+
+  const userData = {
+    name: "John Doe",
+    email: "john@doe.com",
+    avatar: "https://cdn.pixabay.com/photo/2021/03/27/19/25/alone-boy-6129399_1280.jpg",
+  }
   
   return (
     <>
-      <MiniDrawer upperLinks={upperLinks} accordionData={accordionData} />
+      <MiniDrawer upperLinks={upperLinks} accordionData={accordionData} user={userData} />
     </>
   )
 }

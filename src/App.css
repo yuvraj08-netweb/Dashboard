@@ -28,4 +28,36 @@
         max-width: 95% !important;
     }
 }
-  
+.demo{
+    margin-top: 0px !important;
+}
+.demo > div {
+    position: unset;
+}
+.LoggedInfo{
+    display: flex;
+    position: fixed;
+    width: 100%;
+    z-index: 999;
+    padding: 18px 10px 15px 10px;
+    border-bottom: 1px solid;
+    justify-content: space-between;
+}
+.userCard{
+    display: flex;
+    column-gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+.userInfo > span{
+    display: block;
+    font-size: 13px;
+}
+.userInfo .userEmail{
+    font-size: 12px !important;
+    color: #aaa;
+}
+.actionBtns{
+    display: flex;
+    flex-direction: column;
+}
